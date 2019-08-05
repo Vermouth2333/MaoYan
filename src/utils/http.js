@@ -28,7 +28,7 @@ server.interceptors.request.use((config)=>{
 
 server.interceptors.response.use((res)=>{
     if(res.statusText == "OK"){
-        vm.handleDestory();
+       vm.handleDestory();
        
         return res.data
     }

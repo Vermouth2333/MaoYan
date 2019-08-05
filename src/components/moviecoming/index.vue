@@ -34,11 +34,25 @@ import {mapState} from "vuex";
 export default {
   name: "MovieCinema",
   async created() {
-    let data = await movie_coming_api(this.cityId); 
-    this.comingList = data.data.comingList;
+    if(!sessionStorage.getItem("comingList")){
+         let data = await movie_coming_api(this.cityId); 
+         this.comingList = data.data.comingList;
+         sessionStorage.setItem("comingList",JSON.stringify(data.data.comingList))
+    }
+   
     
   },
+  async activated(){
    
+    if(this.pageId !=this.cityId){
+       let data = await movie_coming_api(this.cityId); 
+       this.comingList = data.data.comingList;
+        sessionStorage.setItem("comingList",JSON.stringify(data.data.comingList))
+       this.pageId = this.cityId;
+    } 
+    
+   
+  },
   data() {
     return {
       comingList: [],
