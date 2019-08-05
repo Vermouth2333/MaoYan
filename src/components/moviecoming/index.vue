@@ -1,6 +1,6 @@
 <template>
   <div class="movieWrapper">
-    <alley-BScroll>
+    <alley-BScroll ref="alleyscroll">
       <div class="movie_body">
         <div class="movie_item" v-for="(item,index) in comingList" :key="index">
           <div class="movie_item_pic">
@@ -29,19 +29,49 @@
 </template>
 
 <script>
-import { movie_coming_api } from "api/movie";
+import { movie_coming_api} from "api/movie";
+import {mapState} from "vuex";
 export default {
   name: "MovieCinema",
   async created() {
-    let data = await movie_coming_api();
-
+    let data = await movie_coming_api(this.cityId); 
     this.comingList = data.data.comingList;
-    console.log(this.comingList);
+    
   },
+   
   data() {
     return {
-      comingList: []
+      comingList: [],
+      pageId:-1
     };
+  },
+ 
+  computed:{
+    ...mapState({
+      cityId:state=>state.city.cityId
+    })
+  },
+  mounted(){
+     this.$refs.alleyscroll.handlepullingDown(async ()=>{
+        let n = parseInt(Math.random()*7);
+        let arr = [10,1,20,40,50,55,59]
+
+        let data = await movie_coming_api(arr[n]);
+        this.comingList = data.data.comingList;
+        sessionStorage.setItem("comingList",JSON.stringify(data.data.comingList))
+        this.$refs.alleyscroll.handlefinishPullDown();
+    })
+
+
+    //上拉加载更多
+    this.$refs.alleyscroll.handlepullingUp(async ()=>{
+        let n = parseInt(Math.random()*7);
+        let arr = [10,1,20,40,50,55,59]
+        let data = await movie_coming_api(arr[n]);
+        this.comingList =[...this.comingList,...data.data.comingList];
+        sessionStorage.setItem("comingList",JSON.stringify(data.data.comingList))
+        this.$refs.alleyscroll.handlefinishPullUp();
+    })
   }
 };
 </script>

@@ -29,6 +29,7 @@ server.interceptors.request.use((config)=>{
 server.interceptors.response.use((res)=>{
     if(res.statusText == "OK"){
         vm.handleDestory();
+       
         return res.data
     }
 
@@ -40,7 +41,7 @@ server.interceptors.response.use((res)=>{
 
 export default (method,url,data={})=>{
     if(method.toUpperCase() == "GET"){
-        console.log(data);
+       
         return server.get(url,{
             params:data
         })

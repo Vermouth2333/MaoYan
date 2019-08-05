@@ -1,6 +1,6 @@
 <template>
   <div class="city_body" ref="scroll">
-    <alley-BScroll>
+    <alley-BScroll ref="alleyscroll">
       <div>
         <!--热门城市-->
         <div class="hot_city">
@@ -18,11 +18,13 @@
           <div class="city_list_item" v-for="(item,index) in cityList" :key="index">
             <div class="city_title_letter">{{item.index}}</div>
             <div class="city_list_name">
-              <div
+              <v-touch
                 class="city_list_name_item"
                 v-for="(child,idx) in item.list"
                 :key="idx"
-              >{{child.cityName}}</div>
+                tag="div"
+                @tap="handleTo(child)"
+              >{{child.cityName}}</v-touch>
             </div>
           </div>
         </div>
@@ -42,7 +44,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState,mapMutations} from "vuex";
 export default {
   name: "CityList",
   created() {
@@ -64,12 +66,20 @@ export default {
     ...mapActions({
       handleGetCityAction: "city/handleGetCityAction"
     }),
+    ...mapMutations({
+      handleToggleCity:"city/handleToggleCity"
+    }),
     handleIndexTo(index) {
       let letterFirsts = this.$refs.list.querySelectorAll(".city_title_letter");
-
-      this.$refs.scroll.scrollTop = letterFirsts[index].offsetTop;
+      this.$refs.alleyscroll.scroll.scrollTo(0,-letterFirsts[index].offsetTop,500)
+      //this.$refs.scroll.scrollTop = letterFirsts[index].offsetTop;
+    },
+    handleTo(params){
+      this.$router.push("/movie");
+      this.handleToggleCity(params)
     }
-  }
+  },
+ 
 };
 </script>
 
@@ -77,7 +87,7 @@ export default {
 .city_body {
   background: #ebebeb;
   height: 100%;
-  overflow: auto;
+  _overflow: auto;
 }
 
 /*热门城市*/

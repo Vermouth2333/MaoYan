@@ -1,6 +1,6 @@
 <template>
   <div class="movieWrapper">
-    <alley-BScroll>
+    <alley-BScroll ref="alleyscroll">
       <div class="movie_body">
         <div
           class="movie_item"
@@ -36,19 +36,61 @@
 
 <script>
 import { movie_now_api } from "api/movie";
-
+import {mapState} from "vuex";
 export default {
   name: "MovieNow",
   async created() {
-    let data = await movie_now_api();
-
-    this.movieList = data.data.movieList;
+    if(!sessionStorage.getItem("movieList")){
+        let data = await movie_now_api(this.cityId);
+        this.movieList = data.data.movieList;
+        sessionStorage.setItem("movieList",JSON.stringify(data.data.movieList))
+    }
+    
+  },
+  async activated(){  
+      if(this.pageId !=this.cityId){
+          let data = await movie_now_api(this.cityId);
+          this.movieList = data.data.movieList;
+          sessionStorage.setItem("movieList",JSON.stringify(data.data.movieList))
+          this.pageId = this.cityId;
+      }    
+  },
+  computed:{
+    ...mapState({
+      cityId:state=>state.city.cityId
+    })
   },
   data() {
     return {
-      movieList: []
+      movieList: JSON.parse(sessionStorage.getItem("movieList"))||[],
+      pageId:-1
     };
+  },
+  mounted(){
+    this.$refs.alleyscroll.handlepullingDown(async ()=>{
+        let n = parseInt(Math.random()*7);
+        let arr = [10,1,20,40,50,55,59]
+
+
+
+        let data = await movie_now_api(arr[n]);
+        this.movieList = data.data.movieList;
+        sessionStorage.setItem("movieList",JSON.stringify(data.data.movieList))
+        this.$refs.alleyscroll.handlefinishPullDown();
+    })
+
+
+    //上拉加载更多
+    this.$refs.alleyscroll.handlepullingUp(async ()=>{
+        let n = parseInt(Math.random()*7);
+        let arr = [10,1,20,40,50,55,59]
+        let data = await movie_now_api(arr[n]);
+        this.movieList = [...this.movieList,...data.data.movieList];
+        sessionStorage.setItem("movieList",JSON.stringify(data.data.movieList))
+        this.$refs.alleyscroll.handlefinishPullUp();
+    })
   }
+
 };
 </script>
 

@@ -7,7 +7,7 @@
                 to="/cityList"
                 class="movie_menu_city" 
                 tag="div">
-                <span>北京</span>
+                <span>{{$store.state.city.cityName}}</span>
                 <i class="iconfont">&#xe627;</i>
             </router-link>
             <ul class="movie_menu_switch">

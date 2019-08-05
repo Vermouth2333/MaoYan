@@ -1,9 +1,17 @@
 import {city_api} from "api/movie"
 const state = {
     cityHot:JSON.parse(sessionStorage.getItem("cityHot"))||[],
-    cityList:JSON.parse(sessionStorage.getItem("cityList"))||[]
+    cityList:JSON.parse(sessionStorage.getItem("cityList"))||[],
+    cityName: sessionStorage.getItem("cityName")||"北京",
+    cityId:sessionStorage.getItem("cityId")||10
 }
 const mutations = {
+    handleToggleCity(state,params){
+        state.cityName = params.cityName;
+        state.cityId = params.cityId;
+        sessionStorage.setItem("cityName",params.cityName);
+        sessionStorage.setItem("cityId",params.cityId)
+    },
     handleGetCityMutation(state,params){
        let cityList = [],cityHot=[]
 
