@@ -5,6 +5,7 @@ import cinema from "./cinema"
 import mine from "./mine"
 import cityList from "./cityList"
 import search from "./search"
+import detail from "./detail"
 Vue.use(VueRouter)
 
 
@@ -18,6 +19,7 @@ export default new VueRouter({
         cinema,
         mine,
         cityList,
-        search
+        search,
+        detail
     ]
 })

@@ -2,11 +2,12 @@
   <div class="movieWrapper">
     <alley-BScroll ref="alleyscroll">
       <div class="movie_body">
-        <div
+        <v-touch
           class="movie_item"
           v-for="(item,index) in movieList"
           :key="index"
-          @click="handleclick()"
+          tag="div"
+          @tap="handleToDetail(item.id,item.nm)"
         >
           <div class="movie_item_pic">
             <img :src="item.img |ToImg('128.180')" />
@@ -28,7 +29,7 @@
           <div
             :class="item.globalReleased?'movie_item_btn asale':'movie_item_btn ticket'"
           >{{item.globalReleased?'购票':'预售'}}</div>
-        </div>
+        </v-touch>
       </div>
     </alley-BScroll>
   </div>
@@ -48,6 +49,7 @@ export default {
     
   },
   async activated(){  
+   
       if(this.pageId !=this.cityId){
           let data = await movie_now_api(this.cityId);
           this.movieList = data.data.movieList;
@@ -65,6 +67,11 @@ export default {
       movieList: JSON.parse(sessionStorage.getItem("movieList"))||[],
       pageId:-1
     };
+  },
+  methods:{
+    handleToDetail(id,name){
+      this.$router.push({name:"detail",params:{id,name}})
+    }
   },
   mounted(){
     this.$refs.alleyscroll.handlepullingDown(async ()=>{

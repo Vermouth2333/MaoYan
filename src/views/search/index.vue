@@ -4,26 +4,27 @@
     <div id="content">
       <div class="search_movie_body">
         <div class="search_movie_input">
-          <input type="text" />
+          <input type="text" v-model="movieVal"/>
         </div>
         <h2>电影/电视剧/综艺</h2>
-        <div class="movie_item">
+
+        <div class="movie_item" v-for="(item,index) in movieList" :key="index">
           <div class="movie_item_pic">
             <img
-              src="https://p0.meituan.net/128.180/movie/005955214d5b3e50c910d7a511b0cb571445301.jpg"
+              :src="item.img|ToImg('128.180')"
             />
           </div>
           <div class="movie_item_info">
-            <h2>无名之辈</h2>
+            <h2>{{item.nm}}</h2>
             <p>
-              <span class="person">67554</span>人想看
+              <span class="person">{{item.wish}}</span>人想看
             </p>
             <p>
               主演：
-              <span>Alley 吴彦祖 胡歌</span>
+              <span>{{item.star}}</span>
             </p>
             <p>
-              <span>2019-05-20上映</span>
+              <span>{{item.pubDesc}}</span>
             </p>
           </div>
           <div class="movie_item_btn person">想看</div>
@@ -33,6 +34,35 @@
   </div>
 </template>
 
+<script>
+import {search_api} from "api/movie"
+import {mapState} from "vuex"
+export default {
+  name:"Search",
+  data(){
+    return {
+      movieVal:"",
+      movieList:[]
+    }
+  },
+  timer:null,
+  computed:{
+    ...mapState({
+      cityId:state=>state.city.cityId
+    })
+  },
+  watch:{
+   movieVal(newVal,oldVal){
+        //防抖
+        clearTimeout(this.timer)
+        this.timer = setTimeout( async ()=>{
+            let data = await search_api(this.cityId,newVal)
+            this.movieList = data.data.movies?data.data.movies.list:[]
+        },300)
+    }
+  }
+}
+</script>
 
 <style>
 .page{

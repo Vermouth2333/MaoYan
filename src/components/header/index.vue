@@ -1,5 +1,6 @@
 <template>
     <div class="header">
+        <slot></slot>
         <h2>{{title}}</h2>
     </div>
 </template>
@@ -28,5 +29,11 @@ export default {
         position: fixed;
         left: 0;
         top:0;
+        z-index:10;
+    }
+    .back{
+        position: absolute;
+        left:.2rem;
+        font-size:.3rem;
     }
 </style>
