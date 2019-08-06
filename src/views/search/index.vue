@@ -8,7 +8,11 @@
         </div>
         <h2>电影/电视剧/综艺</h2>
 
-        <div class="movie_item" v-for="(item,index) in movieList" :key="index">
+        <v-touch class="movie_item" 
+            v-for="(item,index) in movieList" 
+            :key="index"
+            @tap="handleToDetail(item.id,item.nm)"
+            >
           <div class="movie_item_pic">
             <img
               :src="item.img|ToImg('128.180')"
@@ -28,7 +32,7 @@
             </p>
           </div>
           <div class="movie_item_btn person">想看</div>
-        </div>
+        </v-touch>
       </div>
     </div>
   </div>
@@ -60,7 +64,12 @@ export default {
             this.movieList = data.data.movies?data.data.movies.list:[]
         },300)
     }
-  }
+  },
+  methods:{
+    handleToDetail(id,name){
+      this.$router.push({name:"detail",params:{id,name}})
+    }
+  },
 }
 </script>
 
