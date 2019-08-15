@@ -27,7 +27,7 @@ export const MessageBox = (function () {
             methods: {
                 handleTrue(){
                     defaultProps.handleOK&&defaultProps.handleOK()
-                   document.body.removeChild(messageVm.$mount().$el)
+                    document.body.removeChild(messageVm.$mount().$el)
                 },
                 handleFalse(){
                     defaultProps.handleCancel&&defaultProps.handleCancel()

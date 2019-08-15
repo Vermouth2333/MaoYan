@@ -4,19 +4,18 @@
     <div id="content">
       <div class="search_movie_body">
         <div class="search_movie_input">
-          <input type="text" v-model="movieVal"/>
+          <input type="text" v-model="movieVal" />
         </div>
         <h2>电影/电视剧/综艺</h2>
 
-        <v-touch class="movie_item" 
-            v-for="(item,index) in movieList" 
-            :key="index"
-            @tap="handleToDetail(item.id,item.nm)"
-            >
+        <v-touch
+          class="movie_item"
+          v-for="(item,index) in movieList"
+          :key="index"
+          @tap="handleToDetail(item.id,item.nm)"
+        >
           <div class="movie_item_pic">
-            <img
-              :src="item.img|ToImg('128.180')"
-            />
+            <img :src="item.img|ToImg('128.180')" />
           </div>
           <div class="movie_item_info">
             <h2>{{item.nm}}</h2>
@@ -39,42 +38,42 @@
 </template>
 
 <script>
-import {search_api} from "api/movie"
-import {mapState} from "vuex"
+import { search_api } from "api/movie";
+import { mapState } from "vuex";
 export default {
-  name:"Search",
-  data(){
+  name: "Search",
+  data() {
     return {
-      movieVal:"",
-      movieList:[]
-    }
+      movieVal: "",
+      movieList: []
+    };
   },
-  timer:null,
-  computed:{
+  timer: null,
+  computed: {
     ...mapState({
-      cityId:state=>state.city.cityId
+      cityId: state => state.city.cityId
     })
   },
-  watch:{
-   movieVal(newVal,oldVal){
-        //防抖
-        clearTimeout(this.timer)
-        this.timer = setTimeout( async ()=>{
-            let data = await search_api(this.cityId,newVal)
-            this.movieList = data.data.movies?data.data.movies.list:[]
-        },300)
+  watch: {
+    movieVal(newVal, oldVal) {
+      //防抖
+      clearTimeout(this.timer);
+      this.timer = setTimeout(async () => {
+        let data = await search_api(this.cityId, newVal);
+        this.movieList = data.data.movies ? data.data.movies.list : [];
+      }, 300);
     }
   },
-  methods:{
-    handleToDetail(id,name){
-      this.$router.push({name:"detail",params:{id,name}})
+  methods: {
+    handleToDetail(id, name) {
+      this.$router.push({ name: "detail", params: { id, name } });
     }
-  },
-}
+  }
+};
 </script>
 
 <style>
-.page{
+.page {
   height: 100%;
 }
 /*content*/
